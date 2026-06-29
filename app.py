@@ -34,47 +34,50 @@ def predict():
 
         row = customers.iloc[int(customer_id)]
 
-        X = row.drop("NPS_Label").to_frame().T
+        X = row.drop(labels=["NPS_Label"], errors="ignore").to_frame().T
 
     else:
-
         X = pd.DataFrame([{
 
-            "SeniorCitizen":
-                int(request.form["SeniorCitizen"]),
+        "Gender": request.form["Gender"],
 
-            "TenureMonths":
-                int(request.form["TenureMonths"]),
+        "Partner": request.form["Partner"],
 
-            "Contract":
-                request.form["Contract"],
+        "SeniorCitizen": request.form["SeniorCitizen"],
 
-            "MonthlyCharges":
-                float(request.form["MonthlyCharges"]),
+        "Dependents": request.form["Dependents"],
 
-            "MultipleLines":
-                request.form["MultipleLines"],
+        "PhoneService": request.form["PhoneService"],
 
-            "InternetService":
-                request.form["InternetService"],
+        "MultipleLines": request.form["MultipleLines"],
 
-            "OnlineSecurity":
-                request.form["OnlineSecurity"],
+        "InternetService": request.form["InternetService"],
 
-            "StreamingTV":
-                request.form["StreamingTV"],
+        "OnlineSecurity": request.form["OnlineSecurity"],
 
-            "StreamingMovies":
-                request.form["StreamingMovies"],
+        "OnlineBackup": request.form["OnlineBackup"],
 
-            "PaperlessBilling":
-                request.form["PaperlessBilling"],
+        "DeviceProtection": request.form["DeviceProtection"],
 
-            "PaymentMethod":
-                request.form["PaymentMethod"]
+        "TechSupport": request.form["TechSupport"],
 
-        }])
+        "StreamingTV": request.form["StreamingTV"],
 
+        "StreamingMovies": request.form["StreamingMovies"],
+
+        "Contract": request.form["Contract"],
+
+        "PaperlessBilling": request.form["PaperlessBilling"],
+
+        "PaymentMethod": request.form["PaymentMethod"],
+
+        "TenureMonths": int(request.form["TenureMonths"]),
+
+        "MonthlyCharges": float(request.form["MonthlyCharges"]),
+
+        "TotalCharges": float(request.form["TotalCharges"])
+
+    }])
     prediction = pipeline.predict(X)[0]
 
     probabilities = pipeline.predict_proba(X)[0]
