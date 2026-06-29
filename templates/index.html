@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+
+    <title>NPS Prediction</title>
+
+    </head>
+
+    <body>
+
+        <h2>NPS Prediction</h2>
+
+        <form action="/predict" method="post">
+
+            <h3>Select Existing Customer</h3>
+
+            <select name="customer_id">
+
+                <option value="">Manual Entry</option>
+
+                {% for id in customer_ids %}
+
+                <option value="{{id}}">{{id}}</option>
+
+                {% endfor %}
+
+            </select>
+
+            <hr>
+
+            <h3>Or Enter Customer Information</h3>
+
+            <input type="number"
+            name="SeniorCitizen"
+            placeholder="Senior Citizen">
+
+            <input type="number"
+            name="TenureMonths"
+            placeholder="Tenure">
+
+            <input type="number"
+            step="0.01"
+            name="MonthlyCharges"
+            placeholder="Monthly Charges">
+
+            <select name="Contract">
+
+                <option>Month-to-month</option>
+
+                <option>One year</option>
+
+                <option>Two year</option>
+
+            </select>
+
+            <select name="MultipleLines">
+
+                <option>Yes</option>
+
+                <option>No</option>
+
+            </select>
+
+            <select name="InternetService">
+
+                <option>DSL</option>
+
+                <option>Fiber optic</option>
+
+                <option>No</option>
+
+            </select>
+
+            <select name="OnlineSecurity">
+
+                <option>Yes</option>
+
+                <option>No</option>
+
+            </select>
+
+            <select name="StreamingTV">
+
+                <option>Yes</option>
+
+                <option>No</option>
+
+            </select>
+
+            <select name="StreamingMovies">
+
+                <option>Yes</option>
+
+                <option>No</option>
+
+            </select>
+
+            <select name="PaperlessBilling">
+
+                <option>Yes</option>
+
+                <option>No</option>
+
+            </select>
+
+            <select name="PaymentMethod">
+
+                <option>Electronic check</option>
+
+                <option>Mailed check</option>
+
+                <option>Credit card (automatic)</option>
+
+                <option>Bank transfer (automatic)</option>
+
+            </select>
+            <textarea
+            name="verbatim"
+            rows="6"
+            cols="50">
+            </textarea>
+
+            <br><br>
+
+            <input type="submit" value="Predict">
+
+        </form>
+
+        {% if prediction %}
+
+        <hr>
+
+        <h2>Prediction</h2>
+
+        <h3>{{prediction}}</h3>
+
+        <h2>Probabilities</h2>
+
+        <ul>
+
+            {% for label, p in probabilities %}
+
+            <li>{{label}} : {{'%.2f' % (p*100)}}%</li>
+
+            {% endfor %}
+
+        </ul>
+
+        {% endif %}
+
+    </body>
+
+</html>
