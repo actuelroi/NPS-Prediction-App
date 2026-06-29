@@ -6,160 +6,275 @@
 
     <title>NPS Prediction</title>
 
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body{
+            background:#f5f7fb;
+        }
+
+        .card{
+            border:none;
+            border-radius:15px;
+            box-shadow:0 8px 20px rgba(0,0,0,.08);
+        }
+
+        .title{
+            color:#0d6efd;
+            font-weight:bold;
+        }
+
+        .section-title{
+            font-weight:600;
+            margin-top:20px;
+            margin-bottom:15px;
+        }
+
+        .result-card{
+            background:#0d6efd;
+            color:white;
+        }
+
+        .progress{
+            height:24px;
+        }
+
+        label{
+            font-weight:500;
+        }
+    </style>
+
+ <script>
+const form = document.querySelector("form");
+const btn = document.getElementById("predictBtn");
+const customer = document.querySelector("[name='customer_id']");
+
+function validateForm() {
+
+    if (customer.value !== "") {
+        btn.disabled = false;
+        return;
+    }
+
+    const required = form.querySelectorAll(
+        "input[required], select[required]"
+    );
+
+    let valid = true;
+
+    required.forEach(el => {
+        if (!el.value) valid = false;
+    });
+
+    btn.disabled = !valid;
+}
+
+form.addEventListener("input", validateForm);
+customer.addEventListener("change", () => {
+    toggleFields();
+    validateForm();
+});
+
+toggleFields();
+validateForm();
+</script>
+
     </head>
 
     <body>
 
+        <div class="container py-5">
         <h2>NPS Prediction</h2>
-
+           {% if error %}
+<div class="alert alert-danger mt-3">
+    {{ error }}
+</div>
+{% endif %}
         <form action="/predict" method="post">
 
-            <h3>Select Existing Customer</h3>
+            <h3 class="section-title">
+                Select Existing Customer
+            </h3>
 
-            <select name="customer_id">
+            <div class="mb-4">
 
-                <option value="">Manual Entry</option>
+<label>Select Customer</label>
 
-                {% for id in customer_ids %}
+<select class="form-select" name="customer_id">
+<option value="">Manual Entry</option>
 
-                <option value="{{id}}">{{id}}</option>
+{% for id in customer_ids %}
+<option value="{{id}}">
+Customer {{id}}
+</option>
+{% endfor %}
 
-                {% endfor %}
+</select>
 
-            </select>
+</div>
 
             <hr>
 
             <h3>Or Enter Customer Information</h3>
-
-            <input type="number"
-            name="SeniorCitizen"
-            placeholder="Senior Citizen">
-
-            <input type="number"
-            name="TenureMonths"
-            placeholder="Tenure">
-
-            <input type="number"
-            step="0.01"
-            name="MonthlyCharges"
-            placeholder="Monthly Charges">
-
-            <select name="Contract">
-
-                <option>Month-to-month</option>
-
-                <option>One year</option>
-
-                <option>Two year</option>
-
-            </select>
-
-            <select name="MultipleLines">
-
-                <option>Yes</option>
-
-                <option>No</option>
-
-            </select>
-
-            <select name="InternetService">
-
-                <option>DSL</option>
-
-                <option>Fiber optic</option>
-
-                <option>No</option>
-
-            </select>
-
-            <select name="OnlineSecurity">
-
-                <option>Yes</option>
-
-                <option>No</option>
-
-            </select>
-
-            <select name="StreamingTV">
-
-                <option>Yes</option>
-
-                <option>No</option>
-
-            </select>
-
-            <select name="StreamingMovies">
-
-                <option>Yes</option>
-
-                <option>No</option>
-
-            </select>
-
-            <select name="PaperlessBilling">
-
-                <option>Yes</option>
-
-                <option>No</option>
-
-            </select>
-
-            <select name="PaymentMethod">
-
-                <option>Electronic check</option>
-
-                <option>Mailed check</option>
-
-                <option>Credit card (automatic)</option>
-
-                <option>Bank transfer (automatic)</option>
-
-            </select>
-            <select name="Gender">
-    <option>Male</option>
-    <option>Female</option>
+<div class="row">
+           <div class="col-md-4 mb-3">
+<label>Senior Citizen</label>
+<select class="form-select" name="SeniorCitizen">
+<option>No</option>
+<option>Yes</option>
 </select>
+</div>
 
-<select name="Partner">
-    <option>Yes</option>
-    <option>No</option>
+            <div class="col-md-4 mb-3">
+<label>Tenure (Months)</label>
+<input class="form-control" type="number" name="TenureMonths">
+</div>
+
+            <div class="col-md-4 mb-3">
+<label>Monthly Charges</label>
+<input class="form-control" type="number" step="0.01" name="MonthlyCharges">
+</div>
+
+           <div class="col-md-4 mb-3">
+<label>Contract</label>
+<select class="form-select" name="Contract">
+<option>Month-to-month</option>
+<option>One year</option>
+<option>Two year</option>
 </select>
+</div>
 
-<select name="Dependents">
-    <option>Yes</option>
-    <option>No</option>
+            <div class="col-md-4 mb-3">
+<label>Multiple Lines</label>
+<select class="form-select" name="MultipleLines">
+<option>Yes</option>
+<option>No</option>
+<option>No phone service</option>
 </select>
+</div>
 
-<select name="PhoneService">
-    <option>Yes</option>
-    <option>No</option>
+            <div class="col-md-4 mb-3">
+<label>Internet Service</label>
+<select class="form-select" name="InternetService">
+<option>Fiber optic</option>
+<option>DSL</option>
+<option>No</option>
 </select>
+</div>
 
-<select name="OnlineBackup">
-    <option>Yes</option>
-    <option>No</option>
+            <div class="col-md-4 mb-3">
+<label>Online Security</label>
+<select class="form-select" name="OnlineSecurity">
+<option>Yes</option>
+<option>No</option>
+<option>No internet service</option>
 </select>
+</div>
 
-<select name="DeviceProtection">
-    <option>Yes</option>
-    <option>No</option>
+            <div class="col-md-4 mb-3">
+<label>Streaming TV</label>
+<select class="form-select" name="StreamingTV">
+<option>Yes</option>
+<option>No</option>
+<option>No internet service</option>
 </select>
+</div>
 
-<select name="TechSupport">
-    <option>Yes</option>
-    <option>No</option>
+            <div class="col-md-4 mb-3">
+<label>Streaming Movies</label>
+<select class="form-select" name="StreamingMovies">
+<option>Yes</option>
+<option>No</option>
+<option>No internet service</option>
 </select>
+</div>
 
-<input
-    type="number"
-    step="0.01"
-    name="TotalCharges"
-    placeholder="Total Charges">
+           <div class="col-md-4 mb-3">
+<label>Paperless Billing</label>
+<select class="form-select" name="PaperlessBilling">
+<option>Yes</option>
+<option>No</option>
+</select>
+</div>
+
+            <div class="col-md-4 mb-3">
+<label>Payment Method</label>
+<select class="form-select" name="PaymentMethod">
+<option>Electronic check</option>
+<option>Mailed check</option>
+<option>Bank transfer (automatic)</option>
+<option>Credit card (automatic)</option>
+</select>
+</div>
+            <div class="col-md-4 mb-3">
+<label>Gender</label>
+<select class="form-select" name="Gender">
+<option>Male</option>
+<option>Female</option>
+</select>
+</div>
+
+<div class="col-md-4 mb-3">
+<label>Partner</label>
+<select class="form-select" name="Partner">
+<option>Yes</option>
+<option>No</option>
+</select>
+</div>
+
+<div class="col-md-4 mb-3">
+<label>Dependents</label>
+<select class="form-select" name="Dependents">
+<option>Yes</option>
+<option>No</option>
+</select>
+</div>
+
+<div class="col-md-4 mb-3">
+<label>Phone Service</label>
+<select class="form-select" name="PhoneService">
+<option>Yes</option>
+<option>No</option>
+</select>
+</div>
+
+<div class="col-md-4 mb-3">
+<label>Online Backup</label>
+<select class="form-select" name="OnlineBackup">
+<option>Yes</option>
+<option>No</option>
+<option>No internet service</option>
+</select>
+</div>
+<div class="col-md-4 mb-3">
+<label>Device Protection</label>
+<select class="form-select" name="DeviceProtection">
+<option>Yes</option>
+<option>No</option>
+<option>No internet service</option>
+</select>
+</div>
+
+<div class="col-md-4 mb-3">
+<label>Tech Support</label>
+<select class="form-select" name="TechSupport">
+<option>Yes</option>
+<option>No</option>
+<option>No internet service</option>
+</select>
+</div>
+
+<div class="col-md-4 mb-3">
+<label>Total Charges</label>
+<input class="form-control" type="number" step="0.01" name="TotalCharges">
+</div>
+</div>
 
             <br><br>
-
-            <input type="submit" value="Predict">
+             <button id="predictBtn" class="btn btn-primary btn-lg" type="submit" >
+    Predict NPS
+</button>
+        
 
         </form>
 
@@ -169,7 +284,7 @@
 
         <h2>Prediction</h2>
 
-        <h3>{{prediction}}</h3>
+        <h3 class='title'>{{prediction}}</h3>
 
         <h2>Probabilities</h2>
 
@@ -184,6 +299,7 @@
         </ul>
 
         {% endif %}
+</div>
 
     </body>
 
