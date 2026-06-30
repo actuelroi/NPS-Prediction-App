@@ -201,7 +201,7 @@ Promoter : 83%
 ## Repository
 
 ```text
-https://github.com/actu/NPS-Prediction-App
+https://github.com/actu/NPS-Prediction-App](https://github.com/actuelroi/NPS-Prediction-App
 ```
 
 ---
